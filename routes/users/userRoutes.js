@@ -35,6 +35,17 @@ userRouter.get("/profile/:id", async (req, res) => {
   }
 });
 
+userRouter.get("/", async (req, res) => {
+  try {
+    res.json({
+      status: "success",
+      data: "all user profile",
+    });
+  } catch (error) {
+    res.json(error.message);
+  }
+});
+
 userRouter.put("/:id", async (req, res) => {
   try {
     res.json({
