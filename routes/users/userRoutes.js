@@ -1,71 +1,25 @@
 const express = require("express");
+const {
+  userRegisterCtrl,
+  userLoginCtrl,
+  userUpdateCtrl,
+  usersCtrl,
+  userProfileCtrl,
+  userDeleteCtrl,
+} = require("../../controllers/users/userCtrl");
 
 const userRouter = express.Router();
 
-userRouter.post("/register", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "user register",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+userRouter.post("/register", userRegisterCtrl);
 
-userRouter.post("/login", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "user login",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+userRouter.post("/login", userLoginCtrl);
 
-userRouter.get("/profile/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "user profile",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+userRouter.get("/profile/:id", userProfileCtrl);
 
-userRouter.get("/", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "all user profile",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+userRouter.get("/", usersCtrl);
 
-userRouter.put("/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "user update",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+userRouter.put("/:id", userUpdateCtrl);
 
-userRouter.delete("/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "user delete",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+userRouter.delete("/:id", userDeleteCtrl);
 
 module.exports = userRouter;
