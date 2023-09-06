@@ -1,8 +1,27 @@
-const userRegisterCtrl = async (req, res) => {
+const User = require("../../model/User/User");
+
+const userEmailRegisterCtrl = async (req, res) => {
+  const { firstname, Lastname, profilephoto, email, password } = req.body;
   try {
+    // check email exist
+    const userFound = await User.findOne({ email });
+    if (userFound) {
+      return res.json({
+        message: "User Already Exist",
+      });
+    }
+    // hash password
+
+    // create the user
+    const user = await User.create({
+      firstname,
+      Lastname,
+      email,
+      password,
+    });
     res.json({
       status: "success",
-      data: "user register",
+      data: user,
     });
   } catch (error) {
     res.json(error.message);
@@ -11,6 +30,17 @@ const userRegisterCtrl = async (req, res) => {
 
 const userLoginCtrl = async (req, res) => {
   try {
+    const { email, password } = req.body;
+    // check user exist
+    const userFound = await User.findOne({ email });
+    const isPasswordMatch = await User.findOne({ password });
+    if (!userFound || !isPasswordMatch) {
+      return res.json({
+        message: "check your email or password.",
+      });
+    }
+    //
+
     res.json({
       status: "success",
       data: "user userLoginCtrl",
@@ -65,7 +95,7 @@ const userDeleteCtrl = async (req, res) => {
 };
 
 module.exports = {
-  userRegisterCtrl,
+  userEmailRegisterCtrl,
   userLoginCtrl,
   usersCtrl,
   userProfileCtrl,
