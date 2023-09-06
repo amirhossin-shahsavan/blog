@@ -1,6 +1,7 @@
 const User = require("../../model/User/User");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../../utils/generateToken");
+const getTokenFromHeader = require("../../utils/getTokenFromHeaders");
 
 const userEmailRegisterCtrl = async (req, res) => {
   const { firstname, Lastname, profilephoto, email, password } = req.body;
@@ -64,8 +65,11 @@ const userLoginCtrl = async (req, res) => {
 };
 
 const userProfileCtrl = async (req, res) => {
-  const { id } = req.param;
+  const { id } = req.params;
   try {
+    const toket = getTokenFromHeader(req);
+    console.log(toket);
+    console.log(`>>>>>id = ${id}`);
     const user = await User.findById(id);
     res.json({
       status: "success",
