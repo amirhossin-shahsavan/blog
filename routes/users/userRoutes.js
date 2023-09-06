@@ -7,6 +7,7 @@ const {
   userProfileCtrl,
   userDeleteCtrl,
 } = require("../../controllers/users/userCtrl");
+const isLogin = require("../../middlewares/isLogin");
 
 const userRouter = express.Router();
 
@@ -16,7 +17,7 @@ userRouter.post("/register/email", userEmailRegisterCtrl);
 
 userRouter.post("/login", userLoginCtrl);
 
-userRouter.get("/profile/:id", userProfileCtrl);
+userRouter.get("/profile/", isLogin, userProfileCtrl);
 
 userRouter.get("/", usersCtrl);
 
