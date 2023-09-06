@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  userRegisterCtrl,
+  userEmailRegisterCtrl,
   userLoginCtrl,
   userUpdateCtrl,
   usersCtrl,
@@ -10,7 +10,9 @@ const {
 
 const userRouter = express.Router();
 
-userRouter.post("/register", userRegisterCtrl);
+userRouter.post("/register/email", userEmailRegisterCtrl);
+
+// userRouter.post("/register/phone", userPhoneRegisterCtrl);
 
 userRouter.post("/login", userLoginCtrl);
 
