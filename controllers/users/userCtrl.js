@@ -1,5 +1,6 @@
 const User = require("../../model/User/User");
 const bcrypt = require("bcryptjs");
+const generateToken = require("../../utils/generateToken");
 
 const userEmailRegisterCtrl = async (req, res) => {
   const { firstname, Lastname, profilephoto, email, password } = req.body;
@@ -40,7 +41,7 @@ const userLoginCtrl = async (req, res) => {
         message: "invalid login credentional",
       });
     }
-    // verifying 
+    // verifying
     const isPasswordMatch = await bcrypt.compare(password, userFound.password);
     if (!isPasswordMatch) {
       return res.json({
@@ -49,7 +50,13 @@ const userLoginCtrl = async (req, res) => {
     }
     res.json({
       status: "success",
-      data: "user userLoginCtrl",
+      data: {
+        firstname: userFound.firstname,
+        Lastname: userFound.Lastname,
+        email: userFound.email,
+        isAdmin: userFound.isAdmin,
+        token: generateToken(userFound._id),
+      },
     });
   } catch (error) {
     res.json(error.message);
@@ -57,10 +64,12 @@ const userLoginCtrl = async (req, res) => {
 };
 
 const userProfileCtrl = async (req, res) => {
+  const { id } = req.param;
   try {
+    const user = await User.findById(id);
     res.json({
       status: "success",
-      data: "user userUpdateCtrl",
+      data: user,
     });
   } catch (error) {
     res.json(error.message);
