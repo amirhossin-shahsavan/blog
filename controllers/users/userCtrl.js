@@ -1,4 +1,5 @@
 const User = require("../../model/User/User");
+const bcrypt = require("bcryptjs");
 
 const userEmailRegisterCtrl = async (req, res) => {
   const { firstname, Lastname, profilephoto, email, password } = req.body;
@@ -11,13 +12,14 @@ const userEmailRegisterCtrl = async (req, res) => {
       });
     }
     // hash password
-
+    const salt = await bcrypt.genSalt(10);
+    const hashedpass = await bcrypt.hash(password, salt);
     // create the user
     const user = await User.create({
       firstname,
       Lastname,
       email,
-      password,
+      password: hashedpass,
     });
     res.json({
       status: "success",
@@ -33,14 +35,18 @@ const userLoginCtrl = async (req, res) => {
     const { email, password } = req.body;
     // check user exist
     const userFound = await User.findOne({ email });
-    const isPasswordMatch = await User.findOne({ password });
-    if (!userFound || !isPasswordMatch) {
+    if (!userFound) {
       return res.json({
-        message: "check your email or password.",
+        message: "invalid login credentional",
       });
     }
-    //
-
+    // verifying 
+    const isPasswordMatch = await bcrypt.compare(password, userFound.password);
+    if (!isPasswordMatch) {
+      return res.json({
+        message: "invalid login credentional",
+      });
+    }
     res.json({
       status: "success",
       data: "user userLoginCtrl",
