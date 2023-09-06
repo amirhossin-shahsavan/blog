@@ -65,12 +65,8 @@ const userLoginCtrl = async (req, res) => {
 };
 
 const userProfileCtrl = async (req, res) => {
-  const { id } = req.params;
   try {
-    const toket = getTokenFromHeader(req);
-    console.log(toket);
-    console.log(`>>>>>id = ${id}`);
-    const user = await User.findById(id);
+    const user = await User.findById(req.userAuth);
     res.json({
       status: "success",
       data: user,
