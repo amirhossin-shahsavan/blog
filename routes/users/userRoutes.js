@@ -6,16 +6,28 @@ const {
   usersCtrl,
   userProfileCtrl,
   userDeleteCtrl,
+  profilePhotoUploadCtrl,
 } = require("../../controllers/users/userCtrl");
 const isLogin = require("../../middlewares/isLogin");
-
+const storage = require("../../config/cloudinary");
+const multer = require("multer");
 const userRouter = express.Router();
+
+// instance of multer
+const upload = multer({ storage });
 
 userRouter.post("/register/email", userEmailRegisterCtrl);
 
 // userRouter.post("/register/phone", userPhoneRegisterCtrl);
 
 userRouter.post("/login", userLoginCtrl);
+
+userRouter.post(
+  "/profile-photo-upload",
+  isLogin,
+  upload.single("profile"),
+  profilePhotoUploadCtrl
+);
 
 userRouter.get("/profile/", isLogin, userProfileCtrl);
 
