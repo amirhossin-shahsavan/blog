@@ -2,16 +2,15 @@ const User = require("../../model/User/User");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../../utils/generateToken");
 const getTokenFromHeader = require("../../utils/getTokenFromHeaders");
+const { appErr, AppErr } = require("../../utils/appErr");
 
-const userEmailRegisterCtrl = async (req, res) => {
+const userEmailRegisterCtrl = async (req, res, next) => {
   const { firstname, Lastname, profilephoto, email, password } = req.body;
   try {
     // check email exist
     const userFound = await User.findOne({ email });
     if (userFound) {
-      return res.json({
-        message: "User Already Exist",
-      });
+      return next(appErr("User Already Exist", 500));
     }
     // hash password
     const salt = await bcrypt.genSalt(10);
@@ -28,7 +27,7 @@ const userEmailRegisterCtrl = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -38,16 +37,12 @@ const userLoginCtrl = async (req, res) => {
     // check user exist
     const userFound = await User.findOne({ email });
     if (!userFound) {
-      return res.json({
-        message: "invalid login credentional",
-      });
+      return next(appErr("invalid login credentional", 500));
     }
     // verifying
     const isPasswordMatch = await bcrypt.compare(password, userFound.password);
     if (!isPasswordMatch) {
-      return res.json({
-        message: "invalid login credentional",
-      });
+      return next(appErr("invalid login credentional", 500));
     }
     res.json({
       status: "success",
@@ -60,7 +55,7 @@ const userLoginCtrl = async (req, res) => {
       },
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -72,7 +67,7 @@ const userProfileCtrl = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -83,7 +78,7 @@ const usersCtrl = async (req, res) => {
       data: "all user profile",
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -94,7 +89,7 @@ const userUpdateCtrl = async (req, res) => {
       data: "user userUpdateCtrl",
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
@@ -105,7 +100,7 @@ const userDeleteCtrl = async (req, res) => {
       data: "user delete",
     });
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message));
   }
 };
 
