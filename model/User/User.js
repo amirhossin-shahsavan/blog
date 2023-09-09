@@ -37,32 +37,54 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["Admin", "Guest", "Editor"],
     },
-    viewedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    followers: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    following: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    active: {
-      type: Boolean,
-      default: true,
-    },
-    posts: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
-    },
+    viewers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+    blocked: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    plan: [
+      {
+        type: String,
+        enum: ["Free", "Premium", "Pro"],
+        default: "Free",
+      },
+    ],
+    userAward:{
+      type: String,
+        enum: ["Bronze", "Silver", "Gold"],
+        default: "Bronze",
+    }
   },
   {
     timestamps: true,
   }
 );
 
-const User = mongoose.model('User',userSchema)
+const User = mongoose.model("User", userSchema);
 
-module.exports = User
+module.exports = User;
