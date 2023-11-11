@@ -59,6 +59,34 @@ const userLoginCtrl = async (req, res) => {
   }
 };
 
+const whoViewedMyProfileCtrl = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    const userWhoViewed = await User.findById(req.userAuth);
+
+    if (user && userWhoViewed) {
+      const isUserAlreadyViewed = user.viewers.find(
+        (viewer) => viewer.toString() === userWhoViewed._id.toJSON()
+      );
+      if (isUserAlreadyViewed) {
+        return next(appErr("you alredy viewed this profile"));
+      } else {
+        user.viewers.push(userWhoViewed._id);
+
+        await user.save();
+
+        res.json({
+          status: "success",
+          data: "you have successfully viewed this profile",
+        });
+      }
+    }
+  } catch (error) {
+    next(appErr(error.message));
+  }
+};
+
 const userProfileCtrl = async (req, res) => {
   try {
     const user = await User.findById(req.userAuth);
@@ -148,4 +176,5 @@ module.exports = {
   userDeleteCtrl,
   userUpdateCtrl,
   profilePhotoUploadCtrl,
+  whoViewedMyProfileCtrl,
 };

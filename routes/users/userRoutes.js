@@ -7,6 +7,7 @@ const {
   userProfileCtrl,
   userDeleteCtrl,
   profilePhotoUploadCtrl,
+  whoViewedMyProfileCtrl,
 } = require("../../controllers/users/userCtrl");
 const isLogin = require("../../middlewares/isLogin");
 const storage = require("../../config/cloudinary");
@@ -34,6 +35,8 @@ userRouter.get("/profile/", isLogin, userProfileCtrl);
 userRouter.get("/", usersCtrl);
 
 userRouter.put("/:id", userUpdateCtrl);
+
+userRouter.get("/profile-viewers/:id", isLogin, whoViewedMyProfileCtrl);
 
 userRouter.delete("/:id", userDeleteCtrl);
 
