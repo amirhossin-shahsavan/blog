@@ -5,7 +5,7 @@ const getTokenFromHeader = require("../../utils/getTokenFromHeaders");
 const { appErr, AppErr } = require("../../utils/appErr");
 
 const userEmailRegisterCtrl = async (req, res, next) => {
-  const { firstname, Lastname, profilephoto, email, password } = req.body;
+  const { firstname, lastname, profilephoto, email, password } = req.body;
   try {
     // check email exist
     const userFound = await User.findOne({ email });
@@ -18,7 +18,7 @@ const userEmailRegisterCtrl = async (req, res, next) => {
     // create the user
     const user = await User.create({
       firstname,
-      Lastname,
+      lastname,
       email,
       password: hashedpass,
     });
@@ -31,7 +31,7 @@ const userEmailRegisterCtrl = async (req, res, next) => {
   }
 };
 
-const userLoginCtrl = async (req, res) => {
+const userLoginCtrl = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     // check user exist
@@ -48,7 +48,7 @@ const userLoginCtrl = async (req, res) => {
       status: "success",
       data: {
         firstname: userFound.firstname,
-        Lastname: userFound.Lastname,
+        lastname: userFound.lastname,
         email: userFound.email,
         isAdmin: userFound.isAdmin,
         token: generateToken(userFound._id),
@@ -79,6 +79,40 @@ const whoViewedMyProfileCtrl = async (req, res, next) => {
         res.json({
           status: "success",
           data: "you have successfully viewed this profile",
+        });
+      }
+    }
+  } catch (error) {
+    next(appErr(error.message));
+  }
+};
+
+const followingCtrl = async (req, res, next) => {
+  try {
+    const userToFollow = await User.findById(req.params.id);
+    const userWhoFollowed = await User.findById(req.userAuth);
+
+    if (userToFollow && userWhoFollowed) {
+      
+      const isUserAlreadyFollowed = userToFollow.following.find(
+        (follower) => follower.toString() === userWhoFollowed._id.toString()
+      );
+
+      console.log(`>>>>>>>>>>>>>>>>>${isUserAlreadyFollowed}`);
+
+      if (isUserAlreadyFollowed) {
+        return next(appErr("you already followed this user"));
+      } else {
+        userToFollow.followers.push(userWhoFollowed._id);
+
+        userWhoFollowed.following.push(userToFollow._id);
+
+        await userWhoFollowed.save();
+        await userToFollow.save();
+
+        res.json({
+          status: "success",
+          data: "you have successfully follow",
         });
       }
     }
@@ -177,4 +211,5 @@ module.exports = {
   userUpdateCtrl,
   profilePhotoUploadCtrl,
   whoViewedMyProfileCtrl,
+  followingCtrl,
 };
