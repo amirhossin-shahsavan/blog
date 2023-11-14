@@ -6,9 +6,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "First Name is required"],
     },
-    Lastname: {
+    lastname: {
       type: String,
-      required: [true, "Last Name is required"],
+      required: [true, "last Name is required"],
     },
     profilephoto: {
       type: String,
@@ -74,11 +74,11 @@ const userSchema = new mongoose.Schema(
         default: "Free",
       },
     ],
-    userAward:{
+    userAward: {
       type: String,
-        enum: ["Bronze", "Silver", "Gold"],
-        default: "Bronze",
-    }
+      enum: ["Bronze", "Silver", "Gold"],
+      default: "Bronze",
+    },
   },
   {
     timestamps: true,
