@@ -97,33 +97,50 @@ const followingCtrl = async (req, res, next) => {
         (follower) => follower.toString() === userWhoFollowed._id.toString()
       );
 
-      console.log(
-        `...1isUserAlreadyFollowed  >>>>>>>>>>>>>>>>>${isUserAlreadyFollowed}`
-      );
-      console.log(`...2userToFollow  >>>>>>>>>>>>>>>>>${userToFollow}`);
-      console.log(
-        `...55userWhoFollowed._id.toString  >>>>>>>>>>>>>>>>>${userWhoFollowed}`
-      );
-      console.log(
-        `...3userToFollow.following  >>>>>>>>>>>>>>>>>${userToFollow.following}`
-      );
-      console.log(
-        `...4userWhoFollowed._id.toString  >>>>>>>>>>>>>>>>>${userWhoFollowed._id}`
-      );
-
       if (isUserAlreadyFollowed) {
         return next(appErr("you already followed this user"));
       } else {
         userToFollow.following.push(userWhoFollowed._id);
 
         userWhoFollowed.followers.push(userToFollow._id);
-        // following
+
         await userWhoFollowed.save();
         await userToFollow.save();
 
         res.json({
           status: "success",
           data: "you have successfully follow",
+        });
+      }
+    }
+  } catch (error) {
+    next(appErr(error.message));
+  }
+};
+
+const unFollowingCtrl = async (req, res, next) => {
+  try {
+    const userWhoUnFollowed = await User.findById(req.params.id);
+    const userToUnFollow = await User.findById(req.userAuth);
+
+    if (userToUnFollow && userWhoUnFollowed) {
+      const isUserAlreadyUnFollowed = userToUnFollow.following.find(
+        (follower) => follower.toString() === userWhoUnFollowed._id.toString()
+      );
+
+      if (!isUserAlreadyUnFollowed) {
+        return next(appErr("you already unfollowed this user"));
+      } else {
+        userToUnFollow.following.pop(userWhoUnFollowed._id);
+
+        userWhoUnFollowed.followers.pop(userToUnFollow._id);
+
+        await userWhoUnFollowed.save();
+        await userToUnFollow.save();
+
+        res.json({
+          status: "success",
+          data: "you have successfully unfollow",
         });
       }
     }
@@ -223,4 +240,5 @@ module.exports = {
   profilePhotoUploadCtrl,
   whoViewedMyProfileCtrl,
   followingCtrl,
+  unFollowingCtrl,
 };
