@@ -89,24 +89,35 @@ const whoViewedMyProfileCtrl = async (req, res, next) => {
 
 const followingCtrl = async (req, res, next) => {
   try {
-    const userToFollow = await User.findById(req.params.id);
-    const userWhoFollowed = await User.findById(req.userAuth);
+    const userWhoFollowed = await User.findById(req.params.id);
+    const userToFollow = await User.findById(req.userAuth);
 
     if (userToFollow && userWhoFollowed) {
-      
       const isUserAlreadyFollowed = userToFollow.following.find(
         (follower) => follower.toString() === userWhoFollowed._id.toString()
       );
 
-      console.log(`>>>>>>>>>>>>>>>>>${isUserAlreadyFollowed}`);
+      console.log(
+        `...1isUserAlreadyFollowed  >>>>>>>>>>>>>>>>>${isUserAlreadyFollowed}`
+      );
+      console.log(`...2userToFollow  >>>>>>>>>>>>>>>>>${userToFollow}`);
+      console.log(
+        `...55userWhoFollowed._id.toString  >>>>>>>>>>>>>>>>>${userWhoFollowed}`
+      );
+      console.log(
+        `...3userToFollow.following  >>>>>>>>>>>>>>>>>${userToFollow.following}`
+      );
+      console.log(
+        `...4userWhoFollowed._id.toString  >>>>>>>>>>>>>>>>>${userWhoFollowed._id}`
+      );
 
       if (isUserAlreadyFollowed) {
         return next(appErr("you already followed this user"));
       } else {
-        userToFollow.followers.push(userWhoFollowed._id);
+        userToFollow.following.push(userWhoFollowed._id);
 
-        userWhoFollowed.following.push(userToFollow._id);
-
+        userWhoFollowed.followers.push(userToFollow._id);
+        // following
         await userWhoFollowed.save();
         await userToFollow.save();
 
