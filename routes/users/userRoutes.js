@@ -11,6 +11,7 @@ const {
   followingCtrl,
   unFollowingCtrl,
   blockUserCtrl,
+  unBlockUserCtrl,
 } = require("../../controllers/users/userCtrl");
 const isLogin = require("../../middlewares/isLogin");
 const storage = require("../../config/cloudinary");
@@ -46,6 +47,8 @@ userRouter.get("/following/:id", isLogin, followingCtrl);
 userRouter.get("/unfollowing/:id", isLogin, unFollowingCtrl);
 
 userRouter.get("/blocked/:id", isLogin, blockUserCtrl);
+
+userRouter.get("/unblocked/:id", isLogin, unBlockUserCtrl);
 
 userRouter.delete("/:id", userDeleteCtrl);
 
