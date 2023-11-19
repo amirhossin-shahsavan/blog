@@ -149,7 +149,7 @@ const unFollowingCtrl = async (req, res, next) => {
   }
 };
 
-const userProfileCtrl = async (req, res) => {
+const userProfileCtrl = async (req, res, next) => {
   try {
     const user = await User.findById(req.userAuth);
     res.json({
@@ -161,7 +161,7 @@ const userProfileCtrl = async (req, res) => {
   }
 };
 
-const usersCtrl = async (req, res) => {
+const usersCtrl = async (req, res, next) => {
   try {
     res.json({
       status: "success",
@@ -172,7 +172,31 @@ const usersCtrl = async (req, res) => {
   }
 };
 
-const userUpdateCtrl = async (req, res) => {
+const blockUserCtrl = async (req, res, next) => {
+  try {
+    const userToBeBloced = await User.findById(req.params.id);
+    const userWhoBlocked = await User.findById(req.userAuth);
+    if (userWhoBlocked && userToBeBloced) {
+      const isUserAlreadyBlocked = userWhoBlocked.blocked.find(
+        (blocked) => blocked.toString() === userToBeBloced._id.toString()
+      );
+      if (isUserAlreadyBlocked) {
+        return next(appErr("you already blocked this user"));
+      } else {
+        userWhoBlocked.blocked.push(userToBeBloced._id);
+        await userWhoBlocked.save();
+        res.json({
+          status: "success",
+          data: "blockUserCtrl",
+        });
+      }
+    }
+  } catch (error) {
+    next(appErr(error.message));
+  }
+};
+
+const userUpdateCtrl = async (req, res, next) => {
   try {
     res.json({
       status: "success",
@@ -219,7 +243,7 @@ const profilePhotoUploadCtrl = async (req, res, next) => {
   }
 };
 
-const userDeleteCtrl = async (req, res) => {
+const userDeleteCtrl = async (req, res, next) => {
   try {
     res.json({
       status: "success",
@@ -241,4 +265,5 @@ module.exports = {
   whoViewedMyProfileCtrl,
   followingCtrl,
   unFollowingCtrl,
+  blockUserCtrl,
 };

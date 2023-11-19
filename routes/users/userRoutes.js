@@ -10,6 +10,7 @@ const {
   whoViewedMyProfileCtrl,
   followingCtrl,
   unFollowingCtrl,
+  blockUserCtrl,
 } = require("../../controllers/users/userCtrl");
 const isLogin = require("../../middlewares/isLogin");
 const storage = require("../../config/cloudinary");
@@ -43,6 +44,8 @@ userRouter.get("/profile-viewers/:id", isLogin, whoViewedMyProfileCtrl);
 userRouter.get("/following/:id", isLogin, followingCtrl);
 
 userRouter.get("/unfollowing/:id", isLogin, unFollowingCtrl);
+
+userRouter.get("/blocked/:id", isLogin, blockUserCtrl);
 
 userRouter.delete("/:id", userDeleteCtrl);
 
