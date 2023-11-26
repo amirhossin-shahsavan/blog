@@ -172,6 +172,24 @@ const usersCtrl = async (req, res, next) => {
   }
 };
 
+const adminBlockUsersCtrl = async (req, res, next) => {
+  try {
+    const userToBeBlock = await User.findById(req.params.id);
+    if (!userToBeBlock) {
+      return next(appErr("user not found"));
+    }
+    userToBeBlock.isBlocked = true;
+
+    await userToBeBlock.save();
+    res.json({
+      status: "success",
+      data: "you have successfully blocked this user",
+    });
+  } catch (error) {
+    next(appErr(error.message));
+  }
+};
+
 const blockUserCtrl = async (req, res, next) => {
   try {
     const userToBeBloced = await User.findById(req.params.id);
@@ -293,4 +311,5 @@ module.exports = {
   unFollowingCtrl,
   blockUserCtrl,
   unBlockUserCtrl,
+  adminBlockUsersCtrl,
 };
