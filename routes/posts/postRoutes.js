@@ -1,60 +1,21 @@
 const express = require("express");
-
+const {
+  createpostCtrl,
+  postDetailsCtrl,
+  deletepostCtrl,
+  updatepostCtrl,
+} = require("../../controllers/posts/postCtrl");
 const postRoutes = express.Router();
+const isLogin = require("../../middlewares/isLogin");
 
-postRoutes.post("/", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "post created",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+postRoutes.post("/", isLogin, createpostCtrl);
 
-postRoutes.get("/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "post is find",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+postRoutes.get("/:id", isLogin, postDetailsCtrl);
 
-postRoutes.get("/", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "all post is find",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+postRoutes.get("/", isLogin, postDetailsCtrl);
 
-postRoutes.put("/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "post put",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+postRoutes.put("/:id", isLogin, updatepostCtrl);
 
-postRoutes.delete("/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "post delete",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+postRoutes.delete("/:id", isLogin, deletepostCtrl);
 
 module.exports = postRoutes;

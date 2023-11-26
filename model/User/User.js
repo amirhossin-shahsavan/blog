@@ -67,11 +67,11 @@ const userSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    plan: {
-      type: String,
-      enum: ["Free", "Premium", "Pro"],
-      default: "Free",
-    },
+    // plan: {
+    //   type: String,
+    //   enum: ["Free", "Premium", "Pro"],
+    //   default: "Free",
+    // },
     userAward: {
       type: String,
       enum: ["Bronze", "Silver", "Gold"],
@@ -88,8 +88,8 @@ userSchema.virtual("fullname").get(function () {
   return `${this.firstname} ${this.lastname}`;
 });
 
-userSchema.virtual("postCount").get(function () {
-  return this.posts.length;
+userSchema.virtual("postcount").get(function () {
+  return this.posts;
 });
 
 userSchema.virtual("followersCount").get(function () {
