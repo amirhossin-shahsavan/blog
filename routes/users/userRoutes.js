@@ -39,9 +39,9 @@ userRouter.post(
 
 userRouter.get("/profile/", isLogin, userProfileCtrl);
 
-userRouter.get("/", usersCtrl);
+userRouter.get("/", isLogin, usersCtrl);
 
-userRouter.put("/:id", userUpdateCtrl);
+userRouter.put("/:id", isLogin, userUpdateCtrl);
 
 userRouter.get("/profile-viewers/:id", isLogin, whoViewedMyProfileCtrl);
 
