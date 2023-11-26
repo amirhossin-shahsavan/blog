@@ -4,11 +4,14 @@ const postRoutes = require("./routes/posts/postRoutes");
 const commentRoutes = require("./routes/comments/commentRoutes");
 const categoryRoutes = require("./routes/categories/categoryRoutes");
 const globalErrorHandler = require("./middlewares/globalErrorHandler");
+const isAdmin = require("./middlewares/isAdmin");
 const dotenv = require("dotenv").config();
+
 require("./config/dbConnect");
 
 const app = express();
 app.use(express.json());
+// app.use(isAdmin)
 
 //------------
 // user Routes

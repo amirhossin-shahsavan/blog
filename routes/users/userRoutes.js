@@ -15,6 +15,7 @@ const {
   adminBlockUsersCtrl,
 } = require("../../controllers/users/userCtrl");
 const isLogin = require("../../middlewares/isLogin");
+const isAdmin = require("../../middlewares/isAdmin");
 const storage = require("../../config/cloudinary");
 const multer = require("multer");
 const userRouter = express.Router();
@@ -51,7 +52,7 @@ userRouter.get("/blocked/:id", isLogin, blockUserCtrl);
 
 userRouter.get("/unblocked/:id", isLogin, unBlockUserCtrl);
 
-userRouter.get("/admin-block/:id", isLogin, adminBlockUsersCtrl);
+userRouter.get("/admin-block/:id", isAdmin, adminBlockUsersCtrl);
 
 userRouter.delete("/:id", userDeleteCtrl);
 
